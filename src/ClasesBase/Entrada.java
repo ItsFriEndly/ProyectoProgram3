@@ -6,6 +6,7 @@ public class Entrada {
 
 		private String id;
 		private Evento evento;
+		private TipoEntrada tipo;
 		private String email;
 		private String tlf;
 		
@@ -27,6 +28,12 @@ public class Entrada {
 		}
 		public void setEvento(Evento evento) {
 			this.evento = evento;
+		}
+		public TipoEntrada getTipo() {
+			return tipo;
+		}
+		public void setTipo(TipoEntrada tipo) {
+			this.tipo = tipo;
 		}
 		public String getEmail() {
 			return email;
@@ -59,7 +66,7 @@ public class Entrada {
 		
 		@Override
 		public String toString() {
-			return "Entrada [id=" + id + ", evento=" + evento + ", email=" + email + ", tlf=" + tlf + "]";
+			return "Entrada [id=" + id + ", evento=" + evento + ", email=" + email + ", tlf=" + tlf + ", tipo=" + tipo + "]";
 		}
 		
 }
