@@ -10,6 +10,10 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.ScrollPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -117,6 +122,17 @@ public class GUI {
 		panelDatos.add(new JLabel("Telefono:"));
 		JTextField tlf = new JTextField();
 		panelDatos.add(tlf);
+		// Comprobar telefono
+		tlf.addKeyListener(new KeyAdapter() {
+
+		    @Override
+		    public void keyTyped(KeyEvent e) {
+		        char caracter = e.getKeyChar();
+		        if (!Character.isDigit(caracter) && !Character.isISOControl(caracter)) {
+		            e.consume();
+		        }
+		    }
+		});
 		panelDatos.add(new JLabel("Tipo Entrada:"));
 		JComboBox<TipoEntrada> tipo = new JComboBox<TipoEntrada>(TipoEntrada.values());
 		panelDatos.add(tipo);
@@ -125,6 +141,47 @@ public class GUI {
 		panelBoton.setOpaque(true);
 		JButton botonComprar = new JButton("Comprar");
 		panelBoton.add(botonComprar);
+		botonComprar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Comprobar seleccion
+				if (tablaEventos.getSelectedRow() == -1) {
+				    JOptionPane.showMessageDialog(frame, "Selecciona un evento primero");
+				    return;
+				}
+				// Comprobar correo
+				if (email.getText().isEmpty() || tlf.getText().isEmpty()) {
+				    JOptionPane.showMessageDialog(frame, "Introduce el email y el telefono");
+				    return;
+				}
+				String correo = email.getText();
+
+				if (!correo.contains("@") || !correo.contains(".")) {
+				    JOptionPane.showMessageDialog(frame, "Introduce un email valido");
+				    return;
+				}
+				// Comprobar telefono
+				String telefono = tlf.getText();
+
+				if (!telefono.matches("[0-9]{9}")) {
+				    JOptionPane.showMessageDialog(frame, "El telefono debe tener 9 numeros");
+				    return;
+				}
+				String nombreEvento = campoEvento.getText();
+				TipoEntrada tipoSeleccionado = (TipoEntrada) tipo.getSelectedItem();
+
+				JOptionPane.showMessageDialog(frame,
+				        "Compra realizada correctamente\n"
+				        + "Evento: " + nombreEvento + "\n"
+				        + "Email: " + correo + "\n"
+				        + "Telefono: " + telefono + "\n"
+				        + "Tipo de entrada: " + tipoSeleccionado);
+				
+				
+				
+			}
+		});
 		
 		ticketPanel.add(panelDatos);
 		ticketPanel.add(panelBoton);
