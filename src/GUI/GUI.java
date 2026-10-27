@@ -10,6 +10,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.ScrollPane;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,11 +21,17 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import ClasesBase.Evento;
 import ClasesBase.TipoEntrada;
+import ClasesBase.Venue;
+import Datos.DatosPrueba;
 
 public class GUI {
 	
@@ -65,23 +74,43 @@ public class GUI {
 		toolPanel.add(botonCuenta, gbc);
 		
 		// Panel Centro
-		JPanel centerPanel = new JPanel();
+		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBackground(Color.LIGHT_GRAY);
-		centerPanel.setOpaque(true);
-		ScrollPane scrollPane = new ScrollPane();
-		centerPanel.add(scrollPane, BorderLayout.CENTER);
 		mainContentPanel.add(centerPanel, BorderLayout.CENTER);
+		
+		// Table de Eventos
+		JLabel tituloEventos = new JLabel("EVENTOS DISPONIBLES");
+		tituloEventos.setHorizontalAlignment(SwingConstants.CENTER);
+		centerPanel.add(tituloEventos, BorderLayout.NORTH);
+		ArrayList<Evento> listaEventos = DatosPrueba.cargarEventos();
+		ModeloTablaEventos modeloTabla = new ModeloTablaEventos(listaEventos);
+		JTable tablaEventos = new JTable(modeloTabla);
+		tablaEventos.getColumnModel().getColumn(0).setPreferredWidth(45);
+		tablaEventos.getColumnModel().getColumn(1).setPreferredWidth(180);
+		tablaEventos.getColumnModel().getColumn(2).setPreferredWidth(90);
+		tablaEventos.getColumnModel().getColumn(3).setPreferredWidth(90);
+		tablaEventos.getColumnModel().getColumn(4).setPreferredWidth(150);
+
+		tablaEventos.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		JScrollPane scrollTabla = new JScrollPane(tablaEventos);
+		centerPanel.add(scrollTabla, BorderLayout.CENTER);
+
 		
 		// Barra Lateral Derecha
 		JPanel ticketPanel = new JPanel();
 		ticketPanel.setLayout(new GridLayout(2, 1, 0, 0));
 		ticketPanel.setOpaque(true);
 		ticketPanel.setBackground(Color.GRAY);
-		ticketPanel.setPreferredSize(new Dimension(250, 600));
+		ticketPanel.setPreferredSize(new Dimension(350, 500));
 		
-		JPanel panelDatos = new JPanel(new GridLayout(3, 2, 25, 25));
+		JPanel panelDatos = new JPanel(new GridLayout(4, 2, 25, 25));
 		panelDatos.setOpaque(true);
 		panelDatos.setBorder(new EmptyBorder(25, 25, 25, 25));
+		// Evento seleccionado
+		panelDatos.add(new JLabel("Evento:"));
+		JTextField campoEvento = new JTextField();
+		campoEvento.setEditable(false);
+		panelDatos.add(campoEvento);
 		panelDatos.add(new JLabel("Email:"));
 		JTextField email = new JTextField();
 		panelDatos.add(email);
@@ -100,6 +129,47 @@ public class GUI {
 		ticketPanel.add(panelDatos);
 		ticketPanel.add(panelBoton);
 		mainContentPanel.add(ticketPanel, BorderLayout.EAST);
+		
+		
+		
+		tablaEventos.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int fila = tablaEventos.getSelectedRow();
+		        if (fila != -1) {
+		            Evento eventoSeleccionado = listaEventos.get(fila);
+		            campoEvento.setText(eventoSeleccionado.getNombre());
+		        }
+				
+			}
+		});
+		
 		
 		frame.setVisible(true);
 		
