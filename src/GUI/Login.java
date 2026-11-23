@@ -13,10 +13,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import ClasesBase.TipoUsuario;
+import ClasesBase.Usuario;
 
 public class Login extends JFrame{
 	
@@ -53,14 +57,28 @@ public class Login extends JFrame{
 		
 		
 		JPanel panelBoton = new JPanel(new FlowLayout());
+		Usuario comprador = new Usuario("1", "Comprador", "comprador@gmail.com", "1234", TipoUsuario.COMPRADOR);
+		Usuario administrador = new Usuario("2", "Administrador", "admin@gmail.com", "1234", TipoUsuario.ADMINISTRADOR);
 		JButton botonLogin = new JButton("INICIAR SESION");
 		botonLogin.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GUI.inicializar();
-				dispose();
-				
+			    String email = correo.getText();
+			    String password = new String(contrasena.getPassword());
+
+			    if (email.equals(comprador.getEmail()) && password.equals(comprador.getContrasena())) {
+			        GUI.inicializar();
+			        dispose();
+
+			    } else if (email.equals(administrador.getEmail()) && password.equals(administrador.getContrasena())) {
+			    	new GestionEventos();
+			    	dispose();
+
+			    } else {
+			        JOptionPane.showMessageDialog(null, "Correo o contraseña incorrectos");
+
+			    }
 			}
 		});
 		panelBoton.add(botonLogin);
